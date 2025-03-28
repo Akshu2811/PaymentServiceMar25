@@ -1,6 +1,7 @@
 package dev.springfirst.paymentservicemar25.controllers;
 
 import com.razorpay.RazorpayException;
+import com.stripe.exception.StripeException;
 import dev.springfirst.paymentservicemar25.dtos.GeneratePaymentRequestDTO;
 import dev.springfirst.paymentservicemar25.services.PaymentService;
 import dev.springfirst.paymentservicemar25.services.RazorPayGateway;
@@ -26,10 +27,10 @@ public class PaymentController {
         this.stripeGateway = stripeGateway;
     }
     @PostMapping("/payments")
-    public String generatePaymentLink(@RequestBody GeneratePaymentRequestDTO generatePaymentRequestDTO) throws RazorpayException {
+    public String generatePaymentLink(@RequestBody GeneratePaymentRequestDTO generatePaymentRequestDTO) throws RazorpayException, StripeException {
         //generate paymentlink and send the order id from the request
 
-            return razorPayGateway.generatePaymentLink(generatePaymentRequestDTO.getOrderId());
+            return stripeGateway.generatePaymentLink(generatePaymentRequestDTO.getOrderId());
     }
 
 }

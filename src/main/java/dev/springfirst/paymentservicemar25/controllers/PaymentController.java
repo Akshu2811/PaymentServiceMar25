@@ -1,7 +1,10 @@
 package dev.springfirst.paymentservicemar25.controllers;
 
+import com.razorpay.RazorpayException;
 import dev.springfirst.paymentservicemar25.dtos.GeneratePaymentRequestDTO;
 import dev.springfirst.paymentservicemar25.services.PaymentService;
+import dev.springfirst.paymentservicemar25.services.RazorPayGateway;
+import dev.springfirst.paymentservicemar25.services.StripeGateway;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,16 +17,19 @@ public class PaymentController {
     //models are entities which we store in our dbs
     //dtos are objects which we might send or receive from my system
 
-    private PaymentService paymentService;
+    private RazorPayGateway razorPayGateway;
+    private StripeGateway stripeGateway;
+    private int counter=0;
 
-    public PaymentController(@Qualifier("Razorpay") PaymentService paymentService) {
-        this.paymentService = paymentService;
+    public PaymentController(RazorPayGateway razorPayGateway, StripeGateway stripeGateway) {
+        this.razorPayGateway = razorPayGateway;
+        this.stripeGateway = stripeGateway;
     }
     @PostMapping("/payments")
-    public String generatePaymentLink(@RequestBody GeneratePaymentRequestDTO generatePaymentRequestDTO) {
+    public String generatePaymentLink(@RequestBody GeneratePaymentRequestDTO generatePaymentRequestDTO) throws RazorpayException {
         //generate paymentlink and send the order id from the request
-        return paymentService.generatePaymentLink(generatePaymentRequestDTO.getOrderId());
 
+            return razorPayGateway.generatePaymentLink(generatePaymentRequestDTO.getOrderId());
     }
 
 }
